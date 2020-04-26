@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const app = express();
 
@@ -8,4 +10,5 @@ app.get('/api/ping', (req, res) => {
 });
 
 const port = process.env.PORT || DEFAULT_PORT;
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

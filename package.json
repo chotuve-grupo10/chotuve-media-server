@@ -4,6 +4,7 @@
   "description": "Media Server para la aplicacion Chotuve, que administra el contenido multimedia",
   "main": "app.js",
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +25,9 @@
   "homepage": "https://github.com/chotuve-grupo10/chotuve-media-server#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-strongloop": "^2.1.0"
   }
 }

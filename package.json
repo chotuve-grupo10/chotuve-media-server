@@ -1,0 +1,25 @@
+{
+  "name": "chotuve-media-server",
+  "version": "0.1.0",
+  "description": "Media Server para la aplicacion Chotuve, que administra el contenido multimedia",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chotuve-grupo10/chotuve-media-server.git"
+  },
+  "keywords": [
+    "Media",
+    "Shared",
+    "Server",
+    "Chotuve"
+  ],
+  "author": "Grupo 10",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chotuve-grupo10/chotuve-media-server/issues"
+  },
+  "homepage": "https://github.com/chotuve-grupo10/chotuve-media-server#readme"
+}

@@ -11,4 +11,7 @@ app.get('/api/ping', (req, res) => {
 
 const port = process.env.PORT || DEFAULT_PORT;
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+
+// Para poder usar la app Express en las pruebas de integracion / aceptacion
+module.exports = server;

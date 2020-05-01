@@ -1,0 +1,34 @@
+language: node_js
+node_js:
+  - 10
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_IMAGE=chotuve-grupo10/chotuve-media-server:$TRAVIS_BUILD_NUMBER
+    - HEROKU_DOCKER_IMAGE=registry.heroku.com/$HEROKU_APP_NAME/web
+
+install:
+  - npm install
+
+script:
+  - npm test
+  # Se le pone a la imagen un nombre intermedio que no se usa para corroborar
+  # que se construye correctamente
+  # Mas adelante se taggea con el nombre que espera Heroku para el container:release
+  - docker build -t $DOCKER_IMAGE .
+
+before_deploy:
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
+  - docker tag $DOCKER_IMAGE $HEROKU_DOCKER_IMAGE
+  - docker push $HEROKU_DOCKER_IMAGE
+
+deploy:
+  provider: script
+  script: heroku container:release web --app $HEROKU_APP_NAME
+  on:
+    branch:
+      - master
+      - dev

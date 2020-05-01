@@ -4,6 +4,7 @@
   "description": "Media Server para la aplicacion Chotuve, que administra el contenido multimedia",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "mocha && cucumber-js"
   },

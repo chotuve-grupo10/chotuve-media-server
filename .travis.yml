@@ -5,8 +5,9 @@ services:
   - docker
 
 env:
-  - DOCKER_IMAGE=chotuve-grupo10/chotuve-media-server:$TRAVIS_BUILD_NUMBER
-  - HEROKU_DOCKER_IMAGE=registry.heroku.com/$HEROKU_APP_NAME/web
+  global:
+    - DOCKER_IMAGE=chotuve-grupo10/chotuve-media-server:$TRAVIS_BUILD_NUMBER
+    - HEROKU_DOCKER_IMAGE=registry.heroku.com/$HEROKU_APP_NAME/web
 
 install:
   - npm install

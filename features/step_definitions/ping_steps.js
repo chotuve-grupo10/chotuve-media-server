@@ -15,5 +15,5 @@ Then('I get an OK response', async function() {
 });
 
 Then('the result is the health status', async function() {
-  expect(JSON.parse(this.response.body)).to.be.eq({Health: 'OK'});
+  expect(JSON.parse(this.response.body)).to.be.deep.equal({Health: 'OK'});
 });

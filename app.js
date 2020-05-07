@@ -6,9 +6,7 @@ const app = express();
 const DEFAULT_PORT = 3000;
 
 app.get('/api/ping', (req, res) => {
-  res.send(JSON.stringify({
-  			"Health": "OK"
-  }));
+  res.send(JSON.stringify({ Health: 'OK' }));
 });
 
 const port = process.env.PORT || DEFAULT_PORT;

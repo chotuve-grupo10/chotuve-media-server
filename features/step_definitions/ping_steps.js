@@ -15,5 +15,5 @@ Then('I get an OK response', async function() {
 });
 
 Then('the result is empty', async function() {
-  expect(JSON.parse(this.response.body)).to.be.empty;
+  expect(JSON.parse(this.response.body)).to.be.eq('OK');
 });

@@ -14,6 +14,6 @@ Then('I get an OK response', async function() {
   expect(this.response.statusCode).to.be.eq(200);
 });
 
-Then('the result is empty', async function() {
-  expect(JSON.parse(this.response.body)).to.be.eq('OK');
+Then('the result is the health status', async function() {
+  expect(JSON.parse(this.response.body)).to.be.eq({Health: 'OK'});
 });

@@ -13,7 +13,7 @@ const router = express.Router();
  *         description: OK
  */
 router.get('/', (req, res) => {
-  res.send(JSON.stringify({Health:'OK'}));
+  res.send(JSON.stringify({Health: 'OK'}));
 });
 
 module.exports = router;

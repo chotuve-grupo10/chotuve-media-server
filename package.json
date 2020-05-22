@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node app.js",
     "pretest": "eslint --ignore-path .gitignore .",
-    "test": "mocha && cucumber-js"
+    "test": "nyc --all --check-coverage mocha && cucumber-js",
+    "report-coverage": "nyc report",
+    "report-coverage-codecov": "nyc report --reporter=text-lcov > coverage.lcov"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-strongloop": "^2.1.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "nyc": "^15.0.1"
   }
 }

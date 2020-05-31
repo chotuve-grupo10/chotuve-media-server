@@ -4,6 +4,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const ping = require('./routes/ping');
+const upload_video = require('./routes/upload_video');
 
 const app = express();
 const DEFAULT_PORT = 3000;
@@ -22,6 +23,7 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 app.use('/api/ping', ping);
+app.use('/api/upload_video', upload_video);
 // Middleware de swagger-ui-express para servir la documentacion OpenAPI
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

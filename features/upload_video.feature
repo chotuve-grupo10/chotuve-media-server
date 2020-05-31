@@ -3,5 +3,5 @@ Feature: Upload video
 
     Scenario: upload video
         When I post the server whit a new video
-        Then I get an OK response
+        Then I get an OK response from the media server
         And the result is that the video was uploaded

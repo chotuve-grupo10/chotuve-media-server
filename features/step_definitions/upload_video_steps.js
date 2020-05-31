@@ -19,7 +19,7 @@ When('I post the server whit a new video', async function() {
   this.setResponse(res);
 });
 
-Then('I get an OK response', async function() {
+Then('I get an OK response from the media server', async function() {
   expect(this.response.statusCode).to.be.eq(200);
 });
 

@@ -30,8 +30,8 @@ const db = require('../database');
  *       200:
  *         description: video uploaded
  */
-router.post('/', (req, res) => {
-  db.addVideo({});
+router.post('/', async(req, res) => {
+  await db.addVideo(req.body);
   res.send(JSON.stringify({Health: 'OK'}));
 });
 

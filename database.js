@@ -5,7 +5,7 @@ var MongoClient = mongodb.MongoClient;
 var url = process.env.MONGODB_URI;
 var db_name = process.env.DATABASE_NAME;
 
-function addVideo(video_to_upload){
+async function addVideo(video_to_upload){
   MongoClient.connect(url, function(err, client) {
     if (err) {
       console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -14,16 +14,7 @@ function addVideo(video_to_upload){
 
       var db = client.db(db_name);
 
-      let data =
-          {
-            file_name: 'test',
-            file_size: '80KB',
-            created_date: '31/5/2020',
-            firebase_url: 'firebaseurl',
-            user: 'test@test.com',
-          };
-
-      db.collection('videos').insertOne(data, function(err, res) {
+      db.collection('videos').insertOne(video_to_upload, function(err, res) {
         if (err) throw err;
         console.log('1 document inserted');
         client.close();
@@ -35,4 +26,4 @@ function addVideo(video_to_upload){
   });
 }
 
-module.exports = addVideo;
+module.exports.addVideo = addVideo;

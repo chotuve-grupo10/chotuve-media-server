@@ -5,8 +5,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const ping = require('./routes/ping');
 const upload_video = require('./routes/upload_video');
+var bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.json())
 const DEFAULT_PORT = 3000;
 require('./database');
 

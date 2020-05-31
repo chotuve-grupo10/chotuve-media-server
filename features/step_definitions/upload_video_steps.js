@@ -24,5 +24,6 @@ Then('I get an OK response', async function() {
 });
 
 Then('the result is that the video was uploaded', async function() {
+  // eslint-disable-next-line max-len
   expect(JSON.parse(this.response.body)).to.be.deep.equal({Upload: 'video uploaded'});
 });

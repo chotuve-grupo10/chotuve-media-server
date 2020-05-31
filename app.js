@@ -8,7 +8,7 @@ const upload_video = require('./routes/upload_video');
 var bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 const DEFAULT_PORT = 3000;
 require('./database');
 

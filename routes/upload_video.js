@@ -31,8 +31,13 @@ const db = require('../database');
  *         description: video uploaded
  */
 router.post('/', async(req, res) => {
-  await db.addVideo(req.body);
-  res.send(JSON.stringify({Health: 'OK'}));
+
+  await db.addVideo(req.body).catch(e => {
+    res.status(500).send({Error: e.message});
+    console.log('Error: ', e.message);
+  });
+
+  res.status(200).send(JSON.stringify({Upload: 'video uploaded'}));
 });
 
 module.exports = router;

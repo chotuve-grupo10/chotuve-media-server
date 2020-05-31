@@ -7,6 +7,7 @@ const ping = require('./routes/ping');
 
 const app = express();
 const DEFAULT_PORT = 3000;
+require('./database');
 
 const swaggerOptions = {
   swaggerDefinition: {

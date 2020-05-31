@@ -19,7 +19,7 @@ MongoClient.connect(url, function(err, client) {
           file_size: '80KB',
           created_date: '31/5/2020',
           firebase_url: 'firebaseurl',
-          user: 'test@test.com'
+          user: 'test@test.com',
         };
 
     db.collection('videos').insertOne(data, function(err, res) {

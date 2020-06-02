@@ -8,9 +8,9 @@ const db = require('../database');
 
 /**
  * @swagger
- * /videos:
+ * /list_videos:
  *   get:
- *     description: Returns the server status
+ *     description: Returns all the videos in the database
  *     responses:
  *       200:
  *         description: OK
@@ -22,7 +22,7 @@ router.get('/', async(req, res) => {
             console.log(err);
             res.status(401).send("Error!");
           }
-          res.send(videosList);        
+          res.send(videosList);
     })
 });
 
@@ -32,7 +32,7 @@ router.get('/:user_name', async(req, res) => {
             console.log(err);
             res.status(401).send("Error!");
           }
-          res.send(videosList);        
+          res.send(videosList);
     })
 });
 

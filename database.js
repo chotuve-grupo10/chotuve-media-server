@@ -15,6 +15,9 @@ async function addVideo(video_to_upload){
 
       var db = client.db(db_name);
 
+      var datetime = new Date();
+      video_to_upload['upload_date'] = datetime.toLocaleDateString();
+
       console.log('Document to insert: ' + JSON.stringify(video_to_upload));
 
       db.collection('videos').insertOne(video_to_upload, function(err, res) {

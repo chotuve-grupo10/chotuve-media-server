@@ -8,9 +8,9 @@ const db = require('../database');
 
 /**
  * @swagger
- * /videos:
- *   get:
- *     description: Returns the server status
+ * /delete_video:
+ *   delete:
+ *     description: Deletes the video with the given id
  *     responses:
  *       200:
  *         description: OK

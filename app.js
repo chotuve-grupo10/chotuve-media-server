@@ -6,7 +6,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const ping = require('./routes/ping');
 const upload_video = require('./routes/upload_video');
 const list_videos = require('./routes/list_videos');
-//const delete_video = require('./routes/delete_video');
+const delete_video = require('./routes/delete_video');
 var bodyParser = require('body-parser');
 
 const app = express();
@@ -32,7 +32,7 @@ app.use('/api/ping', ping);
 app.use('/api/upload_video', upload_video);
 
 app.use('/api/list_videos', list_videos);
-// app.use('/api/delete_video', delete_video);
+app.use('/api/delete_video', delete_video);
 
 // Middleware de swagger-ui-express para servir la documentacion OpenAPI
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

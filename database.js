@@ -90,7 +90,7 @@ var deleteVideoById = async function(id, callback){
 
       var db = client.db(db_name);
       // Crea la query con el user
-      var query = { _id: id };
+      var query = { _id: mongodb.ObjectID(id) };
       // Busca los videos asociados al user
       db.collection('videos').findOneAndDelete(query, function(err, res){
         if (err){

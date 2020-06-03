@@ -38,8 +38,6 @@ app.use('/api/delete_video', delete_video);
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-
-
 const port = process.env.PORT || DEFAULT_PORT;
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 

@@ -82,7 +82,7 @@ var getAllVideosForUser = async function(user_p, callback){
 };
 
 var deleteVideoById = async function(id, callback){
-  return MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function(err, client) {
     if (err) {
       console.log('Unable to connect to the mongoDB server. Error:', err);
     } else {
@@ -90,19 +90,26 @@ var deleteVideoById = async function(id, callback){
 
       var db = client.db(db_name);
       // Crea la query con el user
-      var query = { _id: mongodb.ObjectID(id) };
-      // Busca los videos asociados al user
-      db.collection('videos').findOneAndDelete(query, function(err, res){
-        if (err){
+      if (mongodb.ObjectID.isValid(id)){
+        console.log('The id received is valid');
+        var query = { _id: mongodb.ObjectID(id) };
+        // Busca los videos asociados al user
+        db.collection('videos').findOneAndDelete(query, function(err, res){
+          if (err){
           // eslint-disable-next-line max-len
-          console.log('Unable to delete document to the mongoDB server. Error:', err);
-          throw err;
-        }
-        console.log(res);
-        console.log('Number of records deleted: ' + res.affectedRows);
-        client.close();
+            console.log('Unable to delete document to the mongoDB server. Error:', err);
+            throw err;
+          }
+          console.log(res);
+          console.log('Number of records deleted: ' + res.affectedRows);
+          client.close();
 
-      });
+        });
+      } else {
+        // TODO: tenemos que mandar algo que haga entender a la funcion que hubo un error.
+        console.log('Invalid ID received to delete');
+        client.close();
+      }
 
       // Close connection
       client.close();

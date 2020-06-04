@@ -100,8 +100,8 @@ var deleteVideoById = async function(id, callback){
             console.log('Unable to delete document to the mongoDB server. Error:', err);
             throw err;
           }
-          console.log(res);
           console.log('Number of records deleted: ' + res.affectedRows);
+          callback(null,res);
           client.close();
 
         });
@@ -109,6 +109,7 @@ var deleteVideoById = async function(id, callback){
         // TODO: tenemos que mandar algo que haga entender a la funcion
         // que hubo un error.
         console.log('Invalid ID received to delete');
+        callback('Invalid ID received to delete',null);
         client.close();
       }
 

@@ -106,7 +106,8 @@ var deleteVideoById = async function(id, callback){
 
         });
       } else {
-        // TODO: tenemos que mandar algo que haga entender a la funcion que hubo un error.
+        // TODO: tenemos que mandar algo que haga entender a la funcion
+        // que hubo un error.
         console.log('Invalid ID received to delete');
         client.close();
       }

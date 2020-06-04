@@ -17,11 +17,17 @@ const db = require('../database');
 
 
 router.delete('/:id', async(req, res) => {
-  await db.deleteVideoById(req.params.id).catch(e => {
+  await db.deleteVideoById(req.params.id, function(err, videosList){
+    if (err){
+      res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
+    } else {
+      res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
+    }
+  }).catch(e => {
     res.status(500).send({Error: e.message});
     console.log('Error: ', e.message);
   });
-  res.status(200).send(JSON.stringify({Delete: 'video deleted'}));
+
 });
 
 

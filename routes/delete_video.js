@@ -15,6 +15,7 @@ const db = require('../database');
  *         description: OK
  */
 
+
 router.delete('/:id', async(req, res) => {
   await db.deleteVideoById(req.params.id).catch(e => {
     res.status(500).send({Error: e.message});

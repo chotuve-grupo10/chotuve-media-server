@@ -26,7 +26,7 @@ router.delete('/:id', async(req, res) => {
     }
     // Nos quedamos el primero porque devuelve un vector.
     // La realidad es que el id es unico, nunca va a venir mas de uno.
-    let file_name = file[0].title;
+    let file_name = file[0].fileName;
     console.log('Video to delete: ' + file_name);
     await firebase.deleteFile(file_name);
   });

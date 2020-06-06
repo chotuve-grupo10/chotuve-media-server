@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node app.js",
     "pretest": "eslint --ignore-path .gitignore .",
-    "test": "mocha && cucumber-js"
+    "test": "nyc --all --check-coverage mocha test/**/test*.js && cucumber-js",
+    "report-coverage": "nyc report",
+    "report-coverage-codecov": "nyc report --reporter=text-lcov > coverage.lcov"
   },
   "repository": {
     "type": "git",
@@ -25,17 +27,22 @@
   },
   "homepage": "https://github.com/chotuve-grupo10/chotuve-media-server#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "cucumber": "^6.0.5",
     "express": "^4.17.1",
     "got": "^9.6.0",
     "mocha": "^7.1.2",
+    "mongodb": "^3.5.8",
+    "mongoose": "^5.9.16",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-strongloop": "^2.1.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "nyc": "^15.0.1",
+    "supertest": "^4.0.2"
   }
 }

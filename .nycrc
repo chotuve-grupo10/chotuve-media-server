@@ -1,0 +1,7 @@
+{
+  "branches": 3,
+  "lines": 3,
+  "functions": 3,
+  "statements": 3,
+  "exclude": ["features/", "test/"]
+}

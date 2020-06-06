@@ -1,7 +1,7 @@
 {
-  "branches": 3,
-  "lines": 3,
-  "functions": 3,
-  "statements": 3,
+  "branches": 0,
+  "lines": 0,
+  "functions": 0,
+  "statements": 0,
   "exclude": ["features/", "test/"]
 }

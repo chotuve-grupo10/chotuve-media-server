@@ -94,7 +94,7 @@ var getVideoById = async function(id, callback){
         console.log('The id received is valid');
         var query = { _id: mongodb.ObjectID(id) };
         // Busca los videos asociados al user
-        db.collection('videos').find(query).toArray(function(err, res){
+        db.collection('videos').findOne(query, function(err, res){
           if (err){
           // eslint-disable-next-line max-len
             console.log('Unable to delete document to the mongoDB server. Error:', err);

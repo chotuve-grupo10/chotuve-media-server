@@ -31,6 +31,7 @@
     "chai": "^4.2.0",
     "cucumber": "^6.0.5",
     "express": "^4.17.1",
+    "firebase-admin": "^8.12.1",
     "got": "^9.6.0",
     "mocha": "^7.1.2",
     "mongodb": "^3.5.8",

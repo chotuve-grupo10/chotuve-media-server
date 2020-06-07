@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
+const firebase = require('../firebase-storage');
 
 
 /**
@@ -17,17 +18,27 @@ const db = require('../database');
 
 
 router.delete('/:id', async(req, res) => {
-  await db.deleteVideoById(req.params.id, function(err, videosList){
-    if (err){
-      res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
-    } else {
-      res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
-    }
-  }).catch(e => {
-    res.status(500).send({Error: e.message});
-    console.log('Error: ', e.message);
-  });
 
+  await db.getVideoById(req.params.id, async function(err, file){
+    if (err) {
+      console.log(err);
+      res.status(500).send({Error: err.message});
+    }
+
+    console.log('Video to delete: ' + file.fileName);
+    await firebase.deleteFile(file.fileName);
+
+    await db.deleteVideoById(req.params.id, function(err, videosList){
+      if (err){
+        res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
+      } else {
+        res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
+      }
+    }).catch(e => {
+      res.status(500).send({Error: e.message});
+      console.log('Error: ', e.message);
+    });
+  });
 });
 
 

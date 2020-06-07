@@ -29,19 +29,18 @@ router.delete('/:id', async(req, res) => {
     let file_name = file[0].fileName;
     console.log('Video to delete: ' + file_name);
     await firebase.deleteFile(file_name);
-  });
 
-  await db.deleteVideoById(req.params.id, function(err, videosList){
-    if (err){
-      res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
-    } else {
-      res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
-    }
-  }).catch(e => {
-    res.status(500).send({Error: e.message});
-    console.log('Error: ', e.message);
+    await db.deleteVideoById(req.params.id, function(err, videosList){
+      if (err){
+        res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
+      } else {
+        res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
+      }
+    }).catch(e => {
+      res.status(500).send({Error: e.message});
+      console.log('Error: ', e.message);
+    });
   });
-
 });
 
 

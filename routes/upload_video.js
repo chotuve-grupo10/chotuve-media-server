@@ -26,6 +26,16 @@ const db = require('../database');
  *               type: string
  *             user:
  *               type: string
+ *             description:
+ *               type: string
+ *             fileName:
+ *               type: string
+ *             latitude:
+ *               type: string
+ *             longitude:
+ *               type: string
+ *             isPrivate:
+ *               type: boolean
  *     responses:
  *       200:
  *         description: video uploaded

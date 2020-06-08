@@ -5,6 +5,39 @@ var MongoClient = mongodb.MongoClient;
 var url = process.env.MONGODB_URI;
 var db_name = process.env.DATABASE_NAME;
 
+class Database{
+  constructor(dbHandler){
+    this.db = dbHandler;
+    this.collectionName = 'videos';
+    this.collection = this.db.collection(this.collectionName);
+  }
+
+  async addVideo(video_to_upload){
+
+    var datetime = new Date();
+    video_to_upload['upload_date'] = datetime.toLocaleDateString();
+
+    console.log('Document to insert: ' + JSON.stringify(video_to_upload));
+
+    this.collection.insertOne(video_to_upload, function(err, res) {
+      if (err) {
+        // eslint-disable-next-line max-len
+        console.log('Unable to insert document to the mongoDB server. Error:', err);
+        throw err;
+      }
+      console.log('1 document inserted');
+    });
+  }
+
+  async getAllVideos(callback){
+    // Busca todos los videos
+    this.collection.find({}).toArray(function(err, result) {
+      if (err) throw err;
+      callback(null, result);
+    });
+  };
+}
+
 async function addVideo(video_to_upload){
   MongoClient.connect(url, function(err, client) {
     if (err) {
@@ -158,3 +191,5 @@ module.exports.getAllVideosForUser = getAllVideosForUser;
 module.exports.getVideoById = getVideoById;
 module.exports.deleteVideoById = deleteVideoById;
 module.exports.addVideo = addVideo;
+
+module.exports.Database = Database;

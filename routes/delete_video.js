@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../Database');
+const db = require('../Database').Database;
 const firebase = require('../firebase-storage');
 
 

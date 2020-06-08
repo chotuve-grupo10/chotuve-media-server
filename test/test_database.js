@@ -1,7 +1,7 @@
 'use strict';
 
 var TestDbHelper = require('../test/TestDbHelper').TestDbHelper;
-var Database = require('../database').Database;
+var Database = require('../Database').Database;
 var chai = require('chai');
 var expect = chai.expect;
 

@@ -39,6 +39,18 @@ class Database{
       callback(null, result);
     });
   };
+
+  async getAllVideosForUser(user_p, callback){
+
+    console.log('Looking videos from user ' + user_p);
+    // Crea la query con el user
+    var query = { user: user_p };
+    // Busca los videos asociados al user
+    this.collection.find(query).toArray(function(err, result) {
+      if (err) throw err;
+      callback(null, result);
+    });
+  };
 }
 
 // async function addVideo(video_to_upload){
@@ -94,29 +106,6 @@ class Database{
 //     }
 //   });
 // };
-
-var getAllVideosForUser = async function(user_p, callback){
-  return MongoClient.connect(url, function(err, client) {
-    if (err) {
-      console.log('Unable to connect to the mongoDB server. Error:', err);
-    } else {
-      console.log('Connection established to', url);
-
-      var db = client.db(db_name);
-      // Crea la query con el user
-      var query = { user: user_p };
-      // Busca los videos asociados al user
-      db.collection('videos').find(query).toArray(function(err, result) {
-        if (err) throw err;
-        callback(null, result);
-        client.close();
-      });
-
-      // Close connection
-      client.close();
-    }
-  });
-};
 
 var getVideoById = async function(id, callback){
   return MongoClient.connect(url, function(err, client) {
@@ -190,8 +179,6 @@ var deleteVideoById = async function(id, callback){
 };
 
 
-// module.exports.getAllVideos = getAllVideos;
-module.exports.getAllVideosForUser = getAllVideosForUser;
 module.exports.getVideoById = getVideoById;
 module.exports.deleteVideoById = deleteVideoById;
 // module.exports.addVideo = addVideo;

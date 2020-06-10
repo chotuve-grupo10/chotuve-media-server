@@ -2,7 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const Database = require('../Database').Database;
+const MongoDB = require('../MongoDB').MongoDB;
 
 /**
  * @swagger
@@ -41,6 +42,12 @@ const db = require('../database');
  *         description: video uploaded
  */
 router.post('/', async(req, res) => {
+
+  const db_service = new MongoDB();
+  var db;
+  await db_service.start();
+
+  db = new Database(db_service.db);
 
   await db.addVideo(req.body).catch(e => {
     res.status(500).send({Error: e.message});

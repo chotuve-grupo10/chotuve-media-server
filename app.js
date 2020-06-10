@@ -13,7 +13,6 @@ const app = express();
 app.use(bodyParser.json());
 const DEFAULT_PORT = 3000;
 app.use(bodyParser.json());
-require('./database');
 
 const swaggerOptions = {
   swaggerDefinition: {

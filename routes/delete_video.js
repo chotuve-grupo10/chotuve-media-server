@@ -2,15 +2,27 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const Database = require('../Database').Database;
+const MongoDB = require('../MongoDB').MongoDB;
 const firebase = require('../firebase-storage');
 
 
 /**
  * @swagger
- * /delete_video:
+ * /delete_video/{id}:
  *   delete:
  *     description: Deletes the video with the given id
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Video id.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - id
+ *           properties:
+ *             id:
+ *               type: string
  *     responses:
  *       200:
  *         description: OK
@@ -18,6 +30,12 @@ const firebase = require('../firebase-storage');
 
 
 router.delete('/:id', async(req, res) => {
+
+  const db_service = new MongoDB();
+  var db;
+  await db_service.start();
+
+  db = new Database(db_service.db);
 
   await db.getVideoById(req.params.id, async function(err, file){
     if (err) {

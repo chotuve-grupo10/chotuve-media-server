@@ -28,8 +28,9 @@ class Database{
 
   async getAllVideos(callback){
     // Busca todos los videos
+    let max_results = 15;
     console.log('Getting all videos...');
-    this.collection.find({}).toArray(function(err, result) {
+    this.collection.find({}).limit(max_results).toArray(function(err, result) {
       if (err) throw err;
       console.log('Obtained videos list');
       callback(null, result);

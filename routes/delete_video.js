@@ -9,9 +9,20 @@ const firebase = require('../firebase-storage');
 
 /**
  * @swagger
- * /delete_video:
+ * /delete_video/{id}:
  *   delete:
  *     description: Deletes the video with the given id
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Video id.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - id
+ *           properties:
+ *             id:
+ *               type: string
  *     responses:
  *       200:
  *         description: OK

@@ -44,7 +44,12 @@ router.delete('/:id', async(req, res) => {
     }
 
     console.log('Video to delete: ' + file.fileName);
-    await firebase.deleteFile(file.fileName);
+    await firebase.deleteFile(file.fileName, function(err){
+      if (err){
+        // eslint-disable-next-line max-len
+        console.log(err);
+      }
+    });
 
     await db.deleteVideoById(req.params.id, function(err, videosList){
       if (err){

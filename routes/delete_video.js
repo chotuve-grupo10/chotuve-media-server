@@ -41,26 +41,26 @@ router.delete('/:id', async(req, res) => {
     if (err) {
       console.log(err);
       res.status(500).send({Error: err.message});
+    } else {
+      console.log('Video to delete: ' + file.fileName);
+      await firebase.deleteFile(file.fileName, function(err){
+        if (err){
+          // eslint-disable-next-line max-len
+          console.log(err);
+        }
+      });
+
+      await db.deleteVideoById(req.params.id, function(err, videosList){
+        if (err){
+          res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
+        } else {
+          res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
+        }
+      }).catch(e => {
+        res.status(500).send({Error: e.message});
+        console.log('Error: ', e.message);
+      });
     }
-
-    console.log('Video to delete: ' + file.fileName);
-    await firebase.deleteFile(file.fileName, function(err){
-      if (err){
-        // eslint-disable-next-line max-len
-        console.log(err);
-      }
-    });
-
-    await db.deleteVideoById(req.params.id, function(err, videosList){
-      if (err){
-        res.status(200).send(JSON.stringify({Delete: 'Video not found'}));
-      } else {
-        res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
-      }
-    }).catch(e => {
-      res.status(500).send({Error: e.message});
-      console.log('Error: ', e.message);
-    });
   });
 });
 

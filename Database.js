@@ -9,7 +9,7 @@ class Database{
     console.log('Database initialized');
   }
 
-  async addVideo(video_to_upload){
+  async addVideo(video_to_upload, callback){
 
     var datetime = new Date();
     video_to_upload['upload_date'] = datetime.toLocaleDateString();
@@ -23,6 +23,7 @@ class Database{
         throw err;
       }
       console.log('1 document inserted');
+      callback(null, res);
     });
   }
 

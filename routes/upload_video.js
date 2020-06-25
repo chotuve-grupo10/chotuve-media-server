@@ -38,8 +38,10 @@ const MongoDB = require('../MongoDB').MongoDB;
  *             isPrivate:
  *               type: boolean
  *     responses:
- *       200:
- *         description: video uploaded
+ *       201:
+ *         description: return _id of the inserted document.
+ *       500:
+ *         description: there is an internal problem with the media server.
  */
 router.post('/', async(req, res) => {
 
@@ -49,12 +51,18 @@ router.post('/', async(req, res) => {
 
   db = new Database(db_service.db);
 
-  await db.addVideo(req.body).catch(e => {
+  await db.addVideo(req.body, function(err, insertedDocument){
+    if (err){
+      console.log(err);
+      res.status(500).send({Error: err.message});
+    } else {
+      // eslint-disable-next-line max-len
+      res.status(201).send(JSON.stringify({_id: insertedDocument.insertedId}));
+    }
+  }).catch(e => {
     res.status(500).send({Error: e.message});
     console.log('Error: ', e.message);
   });
-
-  res.status(200).send(JSON.stringify({Upload: 'video uploaded'}));
 });
 
 module.exports = router;

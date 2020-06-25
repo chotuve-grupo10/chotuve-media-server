@@ -40,14 +40,16 @@ describe('Database', function() {
           upload_date: '6/7/2020',
         };
 
-        db_test.addVideo(video_to_add);
+        db_test.addVideo(video_to_add, async function(err, videoInserted){
+          if (err) console.log(err);
 
-        await db_test.getAllVideos(function(err, videosList){
-          if (err) {
-            console.log(err);
-          }
+          await db_test.getAllVideos(function(err, videosList){
+            if (err) {
+              console.log(err);
+            }
 
-          expect(videosList.length).to.be.eq(1);
+            expect(videosList.length).to.be.eq(1);
+          });
         });
       });
   });
@@ -67,14 +69,16 @@ describe('Database', function() {
           upload_date: '6/7/2020',
         };
 
-        db_test.addVideo(video_to_add);
+        db_test.addVideo(video_to_add, async function(err, videoInserted){
+          if (err) console.log(err);
 
-        await db_test.getAllVideosForUser('test', function(err, videosList){
-          if (err) {
-            console.log(err);
-          }
+          await db_test.getAllVideosForUser('test', function(err, videosList){
+            if (err) {
+              console.log(err);
+            }
 
-          expect(videosList.length).to.be.eq(0);
+            expect(videosList.length).to.be.eq(0);
+          });
         });
       });
 
@@ -92,16 +96,18 @@ describe('Database', function() {
           upload_date: '6/7/2020',
         };
 
-        db_test.addVideo(video_to_add);
+        db_test.addVideo(video_to_add, async function(err, videoInserted){
+          if (err) console.log(err);
 
-        // eslint-disable-next-line max-len
-        await db_test.getAllVideosForUser('diegote@gmail.com', function(err, videosList){
-          if (err) {
-            console.log(err);
-          }
+          // eslint-disable-next-line max-len
+          await db_test.getAllVideosForUser('diegote@gmail.com', function(err, videosList){
+            if (err) {
+              console.log(err);
+            }
 
-          expect(videosList.length).to.be.eq(1);
-          expect(videosList[0].user).to.be.eq('diegote@gmail.com');
+            expect(videosList.length).to.be.eq(1);
+            expect(videosList[0].user).to.be.eq('diegote@gmail.com');
+          });
         });
       });
 
@@ -119,25 +125,27 @@ describe('Database', function() {
           upload_date: '6/7/2020',
         };
 
-        db_test.addVideo(video_to_add);
+        db_test.addVideo(video_to_add, async function(err, videoInserted){
+          if (err) console.log(err);
 
-        // eslint-disable-next-line max-len
-        await db_test.getAllVideos(async function(err, videosList){
-          if (err) {
-            console.log(err);
-          }
-
-          let id = videosList[0]._id;
-
-          await db_test.getVideoById(id, function(err, video){
-            if (err){
+          // eslint-disable-next-line max-len
+          await db_test.getAllVideos(async function(err, videosList){
+            if (err) {
               console.log(err);
             }
 
-            // eslint-disable-next-line max-len
-            expect(video.fileName).to.be.eq('5b2bb692-46ab-4bc4-aefc-ac9cd9b97b0c');
-            expect(video.description).to.be.eq('fsaf');
-            expect(video.url).to.be.eq('test');
+            let id = videosList[0]._id;
+
+            await db_test.getVideoById(id, function(err, video){
+              if (err){
+                console.log(err);
+              }
+
+              // eslint-disable-next-line max-len
+              expect(video.fileName).to.be.eq('5b2bb692-46ab-4bc4-aefc-ac9cd9b97b0c');
+              expect(video.description).to.be.eq('fsaf');
+              expect(video.url).to.be.eq('test');
+            });
           });
         });
       });
@@ -158,27 +166,29 @@ describe('Database', function() {
           upload_date: '6/7/2020',
         };
 
-        db_test.addVideo(video_to_add);
+        db_test.addVideo(video_to_add, async function(err, videoInserted){
+          if (err) console.log(err);
 
-        await db_test.getAllVideos(async function(err, videosList){
-          if (err) {
-            console.log(err);
-          }
-
-          expect(videosList.length).to.be.eq(1);
-          let id = videosList[0]._id;
-
-          await db_test.deleteVideoById(id, async function(err, video){
-            if (err){
+          await db_test.getAllVideos(async function(err, videosList){
+            if (err) {
               console.log(err);
             }
 
-            await db_test.getAllVideos(function(err, videos){
+            expect(videosList.length).to.be.eq(1);
+            let id = videosList[0]._id;
+
+            await db_test.deleteVideoById(id, async function(err, video){
               if (err){
                 console.log(err);
               }
 
-              expect(videos.length).to.be.eq(0);
+              await db_test.getAllVideos(function(err, videos){
+                if (err){
+                  console.log(err);
+                }
+
+                expect(videos.length).to.be.eq(0);
+              });
             });
           });
         });

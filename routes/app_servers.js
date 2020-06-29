@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const AppServersCollection = require('../../db/AppServersCollection').AppServersCollection;
-const MongoDB = require('../../MongoDB').MongoDB;
+const AppServersCollection = require('../db/AppServersCollection').AppServersCollection;
+const MongoDB = require('../MongoDB').MongoDB;
 
 /**
  * @swagger
@@ -29,9 +29,9 @@ const MongoDB = require('../../MongoDB').MongoDB;
  *   ErrorResponse:
  *     type: object
  *     properties:
- *     Error:
- *       type: string
- *       example: Error message
+ *       Error:
+ *         type: string
+ *         example: Error message
  */
 router.post('/', async(req, res) => {
 

@@ -7,6 +7,7 @@ const ping = require('./routes/ping');
 const upload_video = require('./routes/upload_video');
 const list_videos = require('./routes/list_videos');
 const delete_video = require('./routes/delete_video');
+const register_app_server = require('./routes/appServers/register_app_server');
 var bodyParser = require('body-parser');
 
 const app = express();

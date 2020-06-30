@@ -11,7 +11,15 @@ const AppServer = require('../model/AppServer').AppServer;
  * @swagger
  * /app_servers:
  *   post:
+ *     tags:
+ *       - name: Admin users only
  *     description: Register app server
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         description: Admin user token
+ *         type: string
+ *         required: true
  *     responses:
  *       201:
  *         description: returns media server token.

@@ -43,7 +43,7 @@ router.post('/', async(req, res) => {
 
   db = new AppServersCollection(db_service.db);
   const app_server_to_add = new AppServer();
-  // eslint-disable-next-line max-le
+  // eslint-disable-next-line max-len
   await db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
     if (err){
       console.log(err);

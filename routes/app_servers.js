@@ -2,8 +2,10 @@
 
 const express = require('express');
 const router = express.Router();
+// eslint-disable-next-line max-len
 const AppServersCollection = require('../db/AppServersCollection').AppServersCollection;
 const MongoDB = require('../MongoDB').MongoDB;
+const AppServer = require('../model/AppServer').AppServer;
 
 /**
  * @swagger
@@ -40,6 +42,19 @@ router.post('/', async(req, res) => {
   await db_service.start();
 
   db = new AppServersCollection(db_service.db);
+  app_server_to_add = new AppServer();
+  await db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
+    if (err){
+      console.log(err);
+      res.status(500).send({Error: err.message});
+    } else {
+      // eslint-disable-next-line max-len
+      res.status(201).send(JSON.stringify({'Media server token': app_server_to_add.getToken()}));
+    }
+  }).catch(e => {
+    res.status(500).send({Error: e.message});
+    console.log('Error: ', e.message);
+  });
 });
 
 module.exports = router;

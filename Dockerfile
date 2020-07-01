@@ -9,5 +9,6 @@ ENV FIREBASE_CREDENTIALS="./chotuve-android-app-firebase-adminsdk-2ry62-8af953dc
 ENV FIREBASE_DATABASE_URL="https://chotuve-android-app.firebaseio.com"
 ENV FIREBASE_BUCKET_NAME="chotuve-android-app.appspot.com"
 ENV FIREBASE_FOLDER_NAME="upload_test"
+ENV TOKEN_SECRET="secret"
 EXPOSE 3000
 CMD ["npm", "run", "start"]

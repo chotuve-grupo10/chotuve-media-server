@@ -56,17 +56,17 @@ describe('Validation functions', function() {
         const app_server_to_add = new AppServer();
 
         // eslint-disable-next-line max-len
-        db_test.addAppServer(app_server_to_add.toJSON(), async function(err, appServerInserted){
+        await db_test.addAppServer(app_server_to_add.toJSON(), async function(err, appServerInserted){
           if (err) console.log(err);
           // eslint-disable-next-line max-len
           expect(appServerInserted.insertedCount).to.be.equal(1);
+        });
 
-          // eslint-disable-next-line max-len
-          validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
-            if (err) console.log(err);
+        // eslint-disable-next-line max-len
+        await validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
+          if (err) console.log(err);
 
-            expect(is_valid).false;
-          });
+          expect(is_valid).false;
         });
       });
   });

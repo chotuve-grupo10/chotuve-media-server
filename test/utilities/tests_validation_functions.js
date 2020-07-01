@@ -62,7 +62,7 @@ describe('Validation functions', function() {
           expect(appServerInserted.insertedCount).to.be.equal(1);
 
           // eslint-disable-next-line max-len
-          validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
+          await validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
             if (err) console.log(err);
 
             expect(is_valid).false;

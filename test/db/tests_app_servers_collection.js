@@ -35,7 +35,10 @@ describe('App servers collection', function() {
 
       // eslint-disable-next-line max-len
       db_test.addAppServer(app_server_to_add.toJSON(), async function(err, appServerInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         expect(appServerInserted.insertedCount).to.be.equal(1);
@@ -53,15 +56,22 @@ describe('App servers collection', function() {
 
       // eslint-disable-next-line max-len
       db_test.addAppServer(app_server_to_add_1.toJSON(), function(err, app_server_inserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         db_test.addAppServer(app_server_to_add_2.toJSON(), function(err, app_server_inserted_2){
-          if (err) console.log(err);
+          if (err) {
+            console.log(err);
+            done(err);
+          }
 
           db_test.getAllAppServers(function(err, appServersList){
             if (err) {
               console.log(err);
+              done(err);
             }
 
             expect(appServersList.length).to.be.eq(2);
@@ -77,12 +87,16 @@ describe('App servers collection', function() {
 
       // eslint-disable-next-line max-len
       db_test.addAppServer(app_server_to_add.toJSON(), function(err, app_server_inserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         db_test.getAppServerWithToken('TEST', function(err, appServersList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(appServersList.length).to.be.eq(0);
@@ -97,12 +111,16 @@ describe('App servers collection', function() {
 
       // eslint-disable-next-line max-len
       db_test.addAppServer(app_server_to_add.toJSON(), function(err, appServerInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         db_test.getAppServerWithToken(app_server_to_add.getToken(), function(err, appServersList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(appServersList.length).to.be.eq(1);
@@ -119,11 +137,15 @@ describe('App servers collection', function() {
 
       // eslint-disable-next-line max-len
       db_test.addAppServer(app_server_to_add.toJSON(), function(err, appServerInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         db_test.getAllAppServers(function(err, appServersList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(appServersList.length).to.be.eq(1);
@@ -132,11 +154,13 @@ describe('App servers collection', function() {
           db_test.deleteAppServerWithToken(app_server_to_add.getToken(), function(err, appServer){
             if (err){
               console.log(err);
+              done(err);
             }
 
             db_test.getAllAppServers(function(err, appServers){
               if (err){
                 console.log(err);
+                done(err);
               }
 
               expect(appServers.length).to.be.eq(0);

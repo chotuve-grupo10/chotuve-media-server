@@ -43,11 +43,12 @@ describe('Database', function() {
       };
 
       db_test.addVideo(video_to_add, function(err, videoInserted){
-        if (err) console.log(err);
+        if (err) done(err);
 
         db_test.getAllVideos(function(err, videosList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(videosList.length).to.be.eq(1);
@@ -73,11 +74,15 @@ describe('Database', function() {
       };
 
       db_test.addVideo(video_to_add, function(err, videoInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         db_test.getAllVideosForUser('test', function(err, videosList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(videosList.length).to.be.eq(0);
@@ -101,12 +106,16 @@ describe('Database', function() {
       };
 
       db_test.addVideo(video_to_add, function(err, videoInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         db_test.getAllVideosForUser('diegote@gmail.com', function(err, videosList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(videosList.length).to.be.eq(1);
@@ -131,12 +140,16 @@ describe('Database', function() {
       };
 
       db_test.addVideo(video_to_add, function(err, videoInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         // eslint-disable-next-line max-len
         db_test.getAllVideos(function(err, videosList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           let id = videosList[0]._id;
@@ -144,6 +157,7 @@ describe('Database', function() {
           db_test.getVideoById(id, function(err, video){
             if (err){
               console.log(err);
+              done(err);
             }
 
             // eslint-disable-next-line max-len
@@ -173,11 +187,15 @@ describe('Database', function() {
       };
 
       db_test.addVideo(video_to_add, function(err, videoInserted){
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+        }
 
         db_test.getAllVideos(function(err, videosList){
           if (err) {
             console.log(err);
+            done(err);
           }
 
           expect(videosList.length).to.be.eq(1);
@@ -186,11 +204,13 @@ describe('Database', function() {
           db_test.deleteVideoById(id, async function(err, video){
             if (err){
               console.log(err);
+              done(err);
             }
 
             db_test.getAllVideos(function(err, videos){
               if (err){
                 console.log(err);
+                done(err);
               }
 
               expect(videos.length).to.be.eq(0);

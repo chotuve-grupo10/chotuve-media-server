@@ -22,52 +22,60 @@ describe('Validation functions', function() {
 
   var db_test;
   beforeEach(function() {
-
     db_test = new AppServersCollection(dbHelper.db);
   });
+
   afterEach(async function() {
-    await dbHelper.cleanup(); ;
+    await dbHelper.cleanup();
   });
 
   describe('Media server token validations', function() {
-    it('should be valid media server token',
-      async function() {
+    it('should be valid media server token', function(done) {
+      const app_server_to_add = new AppServer();
 
-        const app_server_to_add = new AppServer();
+      // eslint-disable-next-line max-len
+      db_test.addAppServer(app_server_to_add.toJSON(), function(err, appServerInserted){
+        if (err){
+          console.log(err);
+          done(err);
+        }
+        // eslint-disable-next-line max-len
+        expect(appServerInserted.insertedCount).to.be.equal(1);
 
         // eslint-disable-next-line max-len
-        db_test.addAppServer(app_server_to_add.toJSON(), async function(err, appServerInserted){
-          if (err) console.log(err);
-          // eslint-disable-next-line max-len
-          expect(appServerInserted.insertedCount).to.be.equal(1);
-
-          // eslint-disable-next-line max-len
-          validation_functions.is_valid_media_server_token(app_server_to_add.getToken(), db_test, function(err, is_valid){
-            if (err) console.log(err);
-
-            expect(is_valid).true;
-          });
+        validation_functions.is_valid_media_server_token(app_server_to_add.getToken(), db_test, function(err, is_valid){
+          if (err){
+            console.log(err);
+            done(err);
+          }
+          expect(is_valid).true;
+          done();
         });
       });
+    });
 
-    it('should be invalid media server token',
-      async function() {
+    it('should be invalid media server token', function(done) {
+      const app_server_to_add = new AppServer();
 
-        const app_server_to_add = new AppServer();
+      // eslint-disable-next-line max-len
+      db_test.addAppServer(app_server_to_add.toJSON(), function(err, appServerInserted){
+        if (err){
+          console.log(err);
+          done(err);
+        }
+        // eslint-disable-next-line max-len
+        expect(appServerInserted.insertedCount).to.be.equal(1);
 
         // eslint-disable-next-line max-len
-        db_test.addAppServer(app_server_to_add.toJSON(), async function(err, appServerInserted){
-          if (err) console.log(err);
-          // eslint-disable-next-line max-len
-          expect(appServerInserted.insertedCount).to.be.equal(1);
-
-          // eslint-disable-next-line max-len
-          validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
-            if (err) console.log(err);
-
-            expect(is_valid).false;
-          });
+        validation_functions.is_valid_media_server_token('TEST', db_test, function(err, is_valid){
+          if (err) {
+            console.log(err);
+            done(err);
+          }
+          expect(is_valid).false;
+          done();
         });
       });
+    });
   });
 });

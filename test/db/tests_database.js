@@ -171,6 +171,44 @@ describe('Database', function() {
     });
   });
 
+  describe('New delete video (awesome name for a test)', function() {
+    it('should delete video', async function() {
+      let video_to_add = {
+        description: 'fsaf',
+        fileName: '5b2bb692-46ab-4bc4-aefc-ac9cd9b97b0c',
+        isPrivate: false,
+        latitude: '-72.544969',
+        longitude: '-13.163175',
+        title: 'fgsdf',
+        url: 'test',
+        user: 'diegote@gmail.com',
+        upload_date: '6/7/2020',
+      };
+
+      var res = await dbHelper.db.collection('videos').insertOne(video_to_add);
+      var insertedId = res.insertedId;
+      var objectInDatabase = await dbHelper.db.collection('videos').findOne();
+      expect(objectInDatabase).not.to.be.null;
+      var deleted = await db_test.deleteVideoByObjectId(insertedId);
+      expect(objectInDatabase._id).to.eql(deleted._id);
+      objectInDatabase = await dbHelper.db.collection('videos').findOne();
+      expect(objectInDatabase).to.be.null;
+    });
+
+    it('should throw an error with an invalid objectId', async function() {
+      db_test.deleteVideoByObjectId('sarasa')
+        .catch((err) => {
+          expect(err).to.be.equal('Invalid ID received to delete');
+        });
+    });
+
+    it('should return null with an inexistent objectId', async function() {
+      var deleted =
+        await db_test.deleteVideoByObjectId('5f1fa6cc27db6d00100e9e31');
+      expect(deleted).to.be.null;
+    });
+  });
+
   describe('Delete video', function() {
     it('should delete only video so list is empty', function(done) {
 

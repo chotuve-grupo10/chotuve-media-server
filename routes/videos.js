@@ -15,6 +15,11 @@ const MongoDB = require('../MongoDB').MongoDB;
  *     security:
  *      - Bearer: []
  *      - AppServerToken: []
+  *     parameters:
+ *       - in: query
+ *         name: user_name
+ *         type: string
+ *         required: false
  *     responses:
  *       200:
  *         description: OK
@@ -33,16 +38,28 @@ router.get('/', async(req, res) => {
   var db;
   await db_service.start();
   db = new Database(db_service.db);
-
-  await db.getAllVideos(function(err, videosList){
-    if (err) {
-      console.log(err);
-      res.status(401).send('Error!');
+  if (req.query.user_name) {
+    console.log(`Filtering resources for user_name ${req.query.user_name}`);
+    await db.getAllVideosForUser(req.query.user_name, function(err, videosList){
+      if (err) {
+        console.log(err);
+        res.status(401).send('Error!');
+        db_service.stop();
+      }
+      res.send(videosList);
       db_service.stop();
-    }
-    res.send(videosList);
-    db_service.stop();
-  });
+    });
+  } else {
+    await db.getAllVideos(function(err, videosList){
+      if (err) {
+        console.log(err);
+        res.status(401).send('Error!');
+        db_service.stop();
+      }
+      res.send(videosList);
+      db_service.stop();
+    });
+  }
 });
 
 module.exports = router;

@@ -38,6 +38,11 @@ class Database{
     });
   };
 
+  async getVideos({for_user, max_results = 15} = {}) {
+    console.log('Getting all videos...');
+    return this.collection.find({}).limit(max_results).toArray();
+  }
+
   async getAllVideosForUser(user_p, callback){
 
     console.log('Looking videos from user ' + user_p);

@@ -8,12 +8,12 @@ const upload_video = require('./routes/upload_video');
 const list_videos = require('./routes/list_videos');
 const delete_video = require('./routes/delete_video');
 const app_servers = require('./routes/app_servers');
+const videos = require('./routes/videos');
+const check_permissions = require('./utilities/middleware/check_permisions');
 var bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.json());
 const DEFAULT_PORT = 3000;
-app.use(bodyParser.json());
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -23,17 +23,19 @@ const swaggerOptions = {
     },
     basePath: '/api',
   },
-  apis: ['./routes/*'], // Path to the API docs
+  apis: ['./routes/*', './swagger_common.yaml'], // Path to the API docs
 };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
+app.use(bodyParser.json());
+app.use('/api/videos', check_permissions);
+
 app.use('/api/ping', ping);
-
 app.use('/api/upload_video', upload_video);
-
 app.use('/api/list_videos', list_videos);
 app.use('/api/delete_video', delete_video);
 app.use('/api/app_servers', app_servers);
+app.use('/api/videos', videos);
 
 // Middleware de swagger-ui-express para servir la documentacion OpenAPI
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

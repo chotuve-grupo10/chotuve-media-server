@@ -1,0 +1,9 @@
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+  AppServerToken:
+    type: apiKey
+    name: AppServerToken
+    in: header

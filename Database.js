@@ -67,12 +67,16 @@ class Database{
       });
     } else {
       console.log('Invalid ID received to delete');
-      callback('Invalid ID received to delete', null);
+      callback(null, null);
     }
   };
 
+  /**
+   * @deprecated
+   * @param {*} id
+   * @param {*} callback
+   */
   async deleteVideoById(id, callback){
-
     if (mongodb.ObjectID.isValid(id)){
       console.log('The id received is valid');
       var query = { _id: mongodb.ObjectID(id) };
@@ -90,6 +94,23 @@ class Database{
       console.log('Invalid ID received to delete');
       callback('Invalid ID received to delete', null);
     }
+  }
+
+  async deleteVideoByObjectId(id){
+    return new Promise((resolve, reject) => {
+      if (mongodb.ObjectID.isValid(id)){
+        console.log('The id received is valid');
+        var query = { _id: mongodb.ObjectID(id) };
+        this.collection.findOneAndDelete(query, function(err, res){
+          if (err) return reject(err);
+          console.log('Deleted ok. About to resolve the promise');
+          resolve(res.value);
+        });
+      } else {
+        console.log('Invalid ID received to delete');
+        reject('Invalid ID received to delete');
+      }
+    });
   };
 }
 

@@ -14,6 +14,7 @@ install:
 
 script:
   - npm test
+  - npm report-coverage-codecov
   # Se le pone a la imagen un nombre intermedio que no se usa para corroborar
   # que se construye correctamente
   # Mas adelante se taggea con el nombre que espera Heroku para el container:release

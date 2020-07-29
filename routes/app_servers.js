@@ -5,8 +5,9 @@ const router = express.Router();
 // eslint-disable-next-line max-len
 const AppServersCollection = require('../db/AppServersCollection').AppServersCollection;
 const MongoDB = require('../MongoDB').MongoDB;
-const AppServer = require('../model/AppServer').AppServer;
+// const AppServer = require('../model/AppServer').AppServer;
 const token_functions = require('../utilities/token_functions');
+const app_servers_functions = require('../utilities/app_servers_functions');
 
 const AUTHORIZATION_HEADER = 'authorization';
 
@@ -87,31 +88,18 @@ const AUTHORIZATION_HEADER = 'authorization';
  */
 router.post('/', async(req, res) => {
   // eslint-disable-next-line max-len
-  if (!token_functions.is_valid_token_from_admin_user(req.get(AUTHORIZATION_HEADER))){
-    console.log('Token is NOT from admin user');
-    res.status(403).send({Error: 'Request doesnt come from an admin user'});
-  } else {
-    console.log('Token is from admin user');
-
-    const db_service = new MongoDB();
-    var db;
-    await db_service.start();
-
-    db = new AppServersCollection(db_service.db);
-    const app_server_to_add = new AppServer();
-    // eslint-disable-next-line max-len
-    await db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
-      if (err){
-        console.log(err);
-        res.status(500).send({Error: err.message});
-      } else {
+  var status = await app_servers_functions.register_app_server(req.get(AUTHORIZATION_HEADER), new MongoDB());
+  switch (status) {
+    case 500:
+      res.status(500).send({Error: 'Internal error'});
+      break;
+    case 403:
+      res.status(403).send({Error: 'Request doesnt come from an admin user'});
+      break;
+    default:
       // eslint-disable-next-line max-len
-        res.status(201).send(JSON.stringify({'Media server token': app_server_to_add.getToken()}));
-      }
-    }).catch(e => {
-      res.status(500).send({Error: e.message});
-      console.log('Error: ', e.message);
-    });
+      res.status(201).send(JSON.stringify({'Media server token': status.getToken()}));
+      break;
   }
 });
 

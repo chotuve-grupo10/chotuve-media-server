@@ -169,6 +169,11 @@ router.delete('/:id', async(req, res) => {
       console.log(`Video to delete: ${file.fileName}`);
       try {
         await firebase.deleteFile(file.fileName);
+        try {
+          await firebase.deleteFile(`thumb_${file.fileName}.jpg`);
+        } catch (err) {
+          console.log(`Couldn't delete thumbnail for file ${file.fileName}`);
+        }
         await db.deleteVideoByObjectId(req.params.id);
         res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
       } catch (err) {

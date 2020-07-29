@@ -27,6 +27,13 @@ class Database{
     });
   }
 
+  async addNewVideo(video_to_upload) {
+    var datetime = new Date();
+    video_to_upload['upload_date'] = datetime.toLocaleDateString();
+    console.log('Document to insert: ' + JSON.stringify(video_to_upload));
+    return this.collection.insertOne(video_to_upload);
+  }
+
   async getAllVideos(callback){
     // Busca todos los videos
     let max_results = 15;
@@ -39,8 +46,15 @@ class Database{
   };
 
   async getVideos({for_user, max_results = 15} = {}) {
-    console.log('Getting all videos...');
-    return this.collection.find({}).limit(max_results).toArray();
+    if (for_user) {
+      // Estoy bastante seguro de que esto no se escribe asi en ingles
+      // pero mantengo el mensaje original
+      console.log(`Looking videos from user ${for_user}`);
+    } else {
+      console.log('Getting all videos...');
+    }
+    var query = for_user ? { user: for_user } : {};
+    return this.collection.find(query).limit(max_results).toArray();
   }
 
   async getAllVideosForUser(user_p, callback){

@@ -82,6 +82,21 @@ describe('Database', function() {
     });
   });
 
+  describe('Add videos using promises', function() {
+    it('should add a video to an empty collection', async function() {
+      var videos = await db_test.getVideos();
+      expect(videos).to.be.empty;
+      await db_test.addNewVideo(test_video);
+      videos = await db_test.getVideos();
+      expect(videos.length).to.equal(1);
+      await db_test.addNewVideo(test_video2);
+      videos = await db_test.getVideos();
+      expect(videos.length).to.equal(2);
+      var videos_desc = videos.map((v) => v.description);
+      expect(videos_desc).to.have.members(['fsaf', 'fafafa']);
+    });
+  });
+
   describe('List videos', function() {
     it('should return no videos for non existing user', function(done) {
 
@@ -221,13 +236,25 @@ describe('Database', function() {
       var videos = await db_test.getVideos();
       expect(videos).not.to.be.empty;
       var retrieved_ids = videos.map((doc) => doc._id);
-      console.log(retrieved_ids);
-      console.log([insertedId1, insertedId2]);
       expect(retrieved_ids).to.have.deep.members([insertedId1, insertedId2]);
     });
+
+    it('should retrieve only the videos for the specified user',
+      async function() {
+        var res = await dbHelper.db.collection('videos').insertOne(test_video);
+        var insertedIdDiegote = res.insertedId;
+        res = await dbHelper.db.collection('videos').insertOne(test_video2);
+        var insertedIdGuillote = res.insertedId;
+        var videos = await db_test.getVideos({for_user: 'diegote@gmail.com'});
+        expect(videos).not.to.be.empty;
+        var retrieved_ids = videos.map((doc) => doc._id);
+        expect(retrieved_ids).to.include.deep.members([insertedIdDiegote]);
+        expect(retrieved_ids).not.to.include.deep.members([insertedIdGuillote]);
+      },
+    );
   });
 
-  describe('New delete video (awesome name for a test)', function() {
+  describe('Delete videos using promises', function() {
     it('should delete video', async function() {
       let video_to_add = {
         description: 'fsaf',

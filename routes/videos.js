@@ -36,31 +36,24 @@ const firebase = require('../firebase-storage');
 
 router.get('/', async(req, res) => {
   const db_service = new MongoDB();
-  var db;
+  var db, videosList;
   await db_service.start();
   db = new Database(db_service.db);
   if (req.query.user_name) {
     console.log(`Filtering resources for user_name ${req.query.user_name}`);
-    await db.getAllVideosForUser(req.query.user_name, function(err, videosList){
-      if (err) {
-        console.log(err);
-        res.status(401).send('Error!');
-        db_service.stop();
-      }
-      res.send(videosList);
-      db_service.stop();
-    });
+    videosList = await db.getVideos({ for_user: req.query.user_name });
   } else {
-    await db.getAllVideos(function(err, videosList){
-      if (err) {
-        console.log(err);
-        res.status(401).send('Error!');
-        db_service.stop();
-      }
-      res.send(videosList);
-      db_service.stop();
-    });
+    videosList = await db.getVideos();
   }
+  await Promise.all(videosList.map(async element => {
+    var { size, thumbnail } = await firebase.getFileMetadata(element.fileName);
+    console.log(`size: ${size}, thumbnail: ${thumbnail}`);
+    element.size = size;
+    element.thumbnail = thumbnail;
+  }));
+  console.log(videosList);
+  res.send(videosList);
+  db_service.stop();
 });
 
 /**
@@ -113,22 +106,13 @@ router.get('/', async(req, res) => {
  *           $ref: '#/definitions/ErrorResponse'
  */
 router.post('/', async(req, res) => {
-
   const db_service = new MongoDB();
   var db;
   await db_service.start();
   console.log('POSTing new video');
   db = new Database(db_service.db);
 
-  await db.addVideo(req.body, function(err, insertedDocument){
-    if (err){
-      console.log(err);
-      res.status(500).send({Error: err.message});
-    } else {
-      // eslint-disable-next-line max-len
-      res.status(201).send(JSON.stringify({_id: insertedDocument.insertedId}));
-    }
-  }).catch(e => {
+  await db.addVideo(req.body).catch(e => {
     res.status(500).send({Error: e.message});
     console.log('Error: ', e.message);
   });
@@ -185,6 +169,11 @@ router.delete('/:id', async(req, res) => {
       console.log(`Video to delete: ${file.fileName}`);
       try {
         await firebase.deleteFile(file.fileName);
+        try {
+          await firebase.deleteFile(`thumb_${file.fileName}.jpg`);
+        } catch (err) {
+          console.log(`Couldn't delete thumbnail for file ${file.fileName}`);
+        }
         await db.deleteVideoByObjectId(req.params.id);
         res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
       } catch (err) {

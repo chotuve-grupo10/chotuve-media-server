@@ -112,10 +112,12 @@ router.post('/', async(req, res) => {
   console.log('POSTing new video');
   db = new Database(db_service.db);
 
-  await db.addVideo(req.body).catch(e => {
+  let insertedDocument = await db.addNewVideo(req.body).catch(e => {
     res.status(500).send({Error: e.message});
     console.log('Error: ', e.message);
   });
+
+  res.status(201).send(JSON.stringify({_id: insertedDocument.insertedId}));
 });
 
 /**

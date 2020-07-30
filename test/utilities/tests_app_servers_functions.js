@@ -106,5 +106,34 @@ describe('App Servers functions', function() {
               });
           });
       });
+
+    it('should get app server with specific token',
+      function(done) {
+        var payload = {user_id: 'test@test.test', admin_user: true};
+        const token = jwt.sign(payload, 'secret');
+        app_servers_functions.register_app_server(token, dbHelper,
+          function(err, res1) {
+            if (err) {
+              console.log(err);
+              done(err);
+            }
+            app_servers_functions.register_app_server(token, dbHelper,
+              function(err, res2) {
+                if (err) {
+                  console.log(err);
+                  done(err);
+                }
+                // eslint-disable-next-line max-len
+                app_servers_functions.get_app_server_with_token(res2.getToken(), token, dbHelper, function(err, appServersList){
+                  if (err) {
+                    console.log(err);
+                    done(err);
+                  }
+                  expect(appServersList.length).to.be.eq(1);
+                  done();
+                });
+              });
+          });
+      });
   });
 });

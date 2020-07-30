@@ -215,27 +215,22 @@ router.get('/', async(req, res) => {
 
 router.get('/:media_server_token', async(req, res) => {
   // eslint-disable-next-line max-len
-  if (!token_functions.is_valid_token_from_admin_user(req.get(AUTHORIZATION_HEADER))){
-    console.log('Token is NOT from admin user');
-    res.status(403).send({Error: 'Request doesnt come from an admin user'});
-  } else {
-    const db_service = new MongoDB();
-    var db;
-    await db_service.start();
-
-    db = new AppServersCollection(db_service.db);
-
-    // eslint-disable-next-line max-len
-    await db.getAppServerWithToken(req.params.media_server_token, function(err, appServersList){
+  app_servers_functions.get_app_server_with_token(req.params.media_server_token, req.get(AUTHORIZATION_HEADER), new MongoDB(),
+    function(err, appServersList) {
       if (err) {
         console.log(err);
         res.status(500).send({Error: err.message});
-        db_service.stop();
       }
-      res.send(appServersList);
-      db_service.stop();
+      switch (appServersList) {
+        case 403:
+        // eslint-disable-next-line max-len
+          res.status(403).send({Error: 'Request doesnt come from an admin user'});
+          break;
+        default:
+          res.send(appServersList);
+          break;
+      }
     });
-  }
 });
 
 router.delete('/:media_server_token', async(req, res) => {

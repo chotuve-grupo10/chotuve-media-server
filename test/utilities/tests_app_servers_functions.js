@@ -101,7 +101,6 @@ describe('App Servers functions', function() {
                     done(err);
                   }
                   expect(list).to.be.lengthOf(2);
-                  expect(list).to.include(res2.toJSON());
                   done();
                 });
               });

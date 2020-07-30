@@ -57,24 +57,16 @@ class Database{
     return this.collection.find(query).limit(max_results).toArray();
   }
 
-  async getVideoById(id, callback){
+  async getVideoById(id){
 
     if (mongodb.ObjectID.isValid(id)){
       console.log('The id received is valid');
       var query = { _id: mongodb.ObjectID(id) };
       // Busca los videos asociados al user
-      this.collection.findOne(query, function(err, res){
-        if (err){
-          // eslint-disable-next-line max-len
-          console.log('Unable to delete document to the mongoDB server. Error:', err);
-          throw err;
-        }
-        console.log('Document found');
-        callback(null, res);
-      });
+      return this.collection.findOne(query);
     } else {
       console.log('Invalid ID received to delete');
-      callback(null, null);
+      return 412;
     }
   };
 

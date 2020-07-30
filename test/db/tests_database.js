@@ -119,7 +119,7 @@ describe('Database', function() {
         }
 
         // eslint-disable-next-line max-len
-        db_test.getAllVideos(function(err, videosList){
+        db_test.getAllVideos(async function(err, videosList){
           if (err) {
             console.log(err);
             done(err);
@@ -127,18 +127,13 @@ describe('Database', function() {
 
           let id = videosList[0]._id;
 
-          db_test.getVideoById(id, function(err, video){
-            if (err){
-              console.log(err);
-              done(err);
-            }
+          let video = await db_test.getVideoById(id);
 
-            // eslint-disable-next-line max-len
-            expect(video.fileName).to.be.eq('5b2bb692-46ab-4bc4-aefc-ac9cd9b97b0c');
-            expect(video.description).to.be.eq('fsaf');
-            expect(video.url).to.be.eq('test');
-            done();
-          });
+          // eslint-disable-next-line max-len
+          expect(video.fileName).to.be.eq('5b2bb692-46ab-4bc4-aefc-ac9cd9b97b0c');
+          expect(video.description).to.be.eq('fsaf');
+          expect(video.url).to.be.eq('test');
+          done();
         });
       });
     });

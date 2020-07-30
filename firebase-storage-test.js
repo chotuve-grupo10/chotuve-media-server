@@ -8,4 +8,9 @@ async function getFileMetadata(file_name) {
   };
 }
 
+async function deleteFile(file_name){
+  console.log('Deleted: ' + file_name);
+}
+
 module.exports.getFileMetadata = getFileMetadata;
+module.exports.deleteFile = deleteFile;

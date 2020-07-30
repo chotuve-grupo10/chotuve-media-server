@@ -35,7 +35,37 @@ async function postVideo(db_service, body){
   return JSON.stringify({_id: insertedDocument.insertedId});
 }
 
+async function deleteVideo(db_service, id, firebase){
+
+  var db;
+  db = new Database(db_service.db);
+
+  let file = await db.getVideoById(id);
+
+  if (!file) {
+    console.log(`File not found: ${file}`);
+    return 404;
+  } else {
+    console.log(`Video to delete: ${file.fileName}`);
+    try {
+      await firebase.deleteFile(file.fileName);
+      try {
+        await firebase.deleteFile(`thumb_${file.fileName}.jpg`);
+      } catch (err) {
+        console.log(`Couldn't delete thumbnail for file ${file.fileName}`);
+      }
+      await db.deleteVideoByObjectId(id);
+      return 200;
+    } catch (err) {
+      console.log('Error deleting video');
+      console.log(err);
+      throw err;
+    }
+  }
+}
+
 module.exports = {
   getVideos: getVideos,
   postVideo: postVideo,
+  deleteVideo: deleteVideo,
 };

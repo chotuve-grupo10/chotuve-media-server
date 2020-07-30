@@ -5,6 +5,7 @@ const router = express.Router();
 const Database = require('../Database').Database;
 const MongoDB = require('../MongoDB').MongoDB;
 const firebase = require('../firebase-storage');
+const videos_functions = require('../utilities/videos_functions');
 
 /**
  * @swagger
@@ -36,22 +37,9 @@ const firebase = require('../firebase-storage');
 
 router.get('/', async(req, res) => {
   const db_service = new MongoDB();
-  var db, videosList;
   await db_service.start();
-  db = new Database(db_service.db);
-  if (req.query.user_name) {
-    console.log(`Filtering resources for user_name ${req.query.user_name}`);
-    videosList = await db.getVideos({ for_user: req.query.user_name });
-  } else {
-    videosList = await db.getVideos();
-  }
-  await Promise.all(videosList.map(async element => {
-    var { size, thumbnail } = await firebase.getFileMetadata(element.fileName);
-    console.log(`size: ${size}, thumbnail: ${thumbnail}`);
-    element.size = size;
-    element.thumbnail = thumbnail;
-  }));
-  console.log(videosList);
+  // eslint-disable-next-line max-len
+  let videosList = await videos_functions.getVideos(db_service, req.query.user_name, firebase);
   res.send(videosList);
   db_service.stop();
 });

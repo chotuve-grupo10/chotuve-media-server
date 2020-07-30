@@ -22,15 +22,44 @@ async function register_app_server(authorization_header, db_service, callback) {
     db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
       if (err){
         console.log(err);
-        return 500;
+        throw err;
       } else {
         callback(null, app_server_to_add);
       }
     }).catch(e => {
       console.log('Error: ', e.message);
-      return 500;
+      throw e;
     });
   }
 }
 
-module.exports.register_app_server = register_app_server;
+async function get_app_servers(authorization_header, db_service, callback) {
+  if (!token_functions.is_valid_token_from_admin_user(authorization_header)) {
+    console.log('Token is NOT from admin user');
+    callback(null, 403);
+  } else {
+    console.log('Token is from admin user');
+
+    var db;
+    await db_service.start();
+
+    db = new AppServersCollection(db_service.db);
+    // eslint-disable-next-line max-len
+    db.getAllAppServers(function(err, appServersList){
+      if (err){
+        console.log(err);
+        throw err;
+      } else {
+        callback(null, appServersList);
+      }
+    }).catch(e => {
+      console.log('Error: ', e.message);
+      throw e;
+    });
+  }
+}
+
+module.exports = {
+  register_app_server: register_app_server,
+  get_app_servers: get_app_servers,
+};

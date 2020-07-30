@@ -88,43 +88,43 @@ const AUTHORIZATION_HEADER = 'authorization';
  */
 router.post('/', async(req, res) => {
   // eslint-disable-next-line max-len
-  var status = await app_servers_functions.register_app_server(req.get(AUTHORIZATION_HEADER), new MongoDB());
-  switch (status) {
-    case 500:
-      res.status(500).send({Error: 'Internal error'});
-      break;
-    case 403:
-      res.status(403).send({Error: 'Request doesnt come from an admin user'});
-      break;
-    default:
-      // eslint-disable-next-line max-len
-      res.status(201).send(JSON.stringify({'Media server token': status.getToken()}));
-      break;
-  }
+  app_servers_functions.register_app_server(req.get(AUTHORIZATION_HEADER), new MongoDB(),
+    function(err, status) {
+      if (err) {
+        console.log(err);
+        res.status(500).send({Error: err.message});
+      }
+      switch (status) {
+        case 403:
+          // eslint-disable-next-line max-len
+          res.status(403).send({Error: 'Request doesnt come from an admin user'});
+          break;
+        default:
+          // eslint-disable-next-line max-len
+          res.status(201).send(JSON.stringify({'Media server token': status.getToken()}));
+          break;
+      }
+    });
 });
 
 router.get('/', async(req, res) => {
   // eslint-disable-next-line max-len
-  if (!token_functions.is_valid_token_from_admin_user(req.get(AUTHORIZATION_HEADER))){
-    console.log('Token is NOT from admin user');
-    res.status(403).send({Error: 'Request doesnt come from an admin user'});
-  } else {
-    const db_service = new MongoDB();
-    var db;
-    await db_service.start();
-
-    db = new AppServersCollection(db_service.db);
-
-    await db.getAllAppServers(function(err, appServersList){
+  app_servers_functions.get_app_servers(req.get(AUTHORIZATION_HEADER), new MongoDB(),
+    function(err, appServersList) {
       if (err) {
         console.log(err);
         res.status(500).send({Error: err.message});
-        db_service.stop();
       }
-      res.send(appServersList);
-      db_service.stop();
+      switch (appServersList) {
+        case 403:
+          // eslint-disable-next-line max-len
+          res.status(403).send({Error: 'Request doesnt come from an admin user'});
+          break;
+        default:
+          res.send(appServersList);
+          break;
+      }
     });
-  }
 });
 
 /**

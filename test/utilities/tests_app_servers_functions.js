@@ -18,7 +18,7 @@ describe('App Servers functions', function() {
     await dbHelper.stop();
   });
 
-  afterEach(async function() {
+  this.afterEach(async function() {
     await dbHelper.cleanup(); ;
   });
 
@@ -59,5 +59,53 @@ describe('App Servers functions', function() {
       });
 
     });
+  });
+
+  describe('Get app servers', function() {
+    it('should get zero app servers',
+      function(done) {
+        // eslint-disable-next-line max-len
+        var payload = {user_id: 'test@test.test', admin_user: true};
+        const token = jwt.sign(payload, 'secret');
+
+        // eslint-disable-next-line max-len
+        app_servers_functions.get_app_servers(token, dbHelper, function(err, emptyList){
+          if (err) {
+            console.log(err);
+            done(err);
+          }
+          expect(emptyList).to.be.lengthOf(0);
+          done();
+        });
+      });
+    it('should get two app servers',
+      function(done) {
+        var payload = {user_id: 'test@test.test', admin_user: true};
+        const token = jwt.sign(payload, 'secret');
+        app_servers_functions.register_app_server(token, dbHelper,
+          function(err, res1) {
+            if (err) {
+              console.log(err);
+              done(err);
+            }
+            app_servers_functions.register_app_server(token, dbHelper,
+              function(err, res2) {
+                if (err) {
+                  console.log(err);
+                  done(err);
+                }
+                // eslint-disable-next-line max-len
+                app_servers_functions.get_app_servers(token, dbHelper, function(err, list){
+                  if (err) {
+                    console.log(err);
+                    done(err);
+                  }
+                  expect(list).to.be.lengthOf(2);
+                  expect(list).to.include(res2.toJSON());
+                  done();
+                });
+              });
+          });
+      });
   });
 });

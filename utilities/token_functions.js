@@ -15,7 +15,4 @@ function is_valid_token_from_admin_user(token_received){
   }
 }
 
-// function get_valid_token_for_admin_user(user_email) {
-// }
-
 module.exports.is_valid_token_from_admin_user = is_valid_token_from_admin_user;

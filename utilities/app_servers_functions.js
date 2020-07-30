@@ -5,11 +5,11 @@ const AppServer = require('../model/AppServer').AppServer;
 // eslint-disable-next-line max-len
 const AppServersCollection = require('../db/AppServersCollection').AppServersCollection;
 
-async function register_app_server(authorization_header, db_service) {
+async function register_app_server(authorization_header, db_service, callback) {
 
   if (!token_functions.is_valid_token_from_admin_user(authorization_header)) {
     console.log('Token is NOT from admin user');
-    return 403;
+    callback(null, 403);
   } else {
     console.log('Token is from admin user');
 
@@ -19,12 +19,12 @@ async function register_app_server(authorization_header, db_service) {
     db = new AppServersCollection(db_service.db);
     const app_server_to_add = new AppServer();
     // eslint-disable-next-line max-len
-    await db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
+    db.addAppServer(app_server_to_add.toJSON(), function(err, insertedDocument){
       if (err){
         console.log(err);
         return 500;
       } else {
-        return app_server_to_add;
+        callback(null, app_server_to_add);
       }
     }).catch(e => {
       console.log('Error: ', e.message);

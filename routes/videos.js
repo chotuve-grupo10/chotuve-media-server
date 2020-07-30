@@ -95,17 +95,16 @@ router.get('/', async(req, res) => {
  */
 router.post('/', async(req, res) => {
   const db_service = new MongoDB();
-  var db;
   await db_service.start();
-  console.log('POSTing new video');
-  db = new Database(db_service.db);
 
-  let insertedDocument = await db.addNewVideo(req.body).catch(e => {
-    res.status(500).send({Error: e.message});
+  // eslint-disable-next-line max-len
+  let video_inserted_id = await videos_functions.postVideo(db_service, req.body).catch(e => {
     console.log('Error: ', e.message);
+    res.status(500).send({Error: e.message});
   });
 
-  res.status(201).send(JSON.stringify({_id: insertedDocument.insertedId}));
+  res.status(201).send(video_inserted_id);
+  db_service.stop();
 });
 
 /**

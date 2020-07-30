@@ -21,6 +21,21 @@ async function getVideos(db_service, user_name, firebase){
   return videosList;
 }
 
+async function postVideo(db_service, body){
+
+  var db;
+  console.log('POSTing new video');
+  db = new Database(db_service.db);
+
+  let insertedDocument = await db.addNewVideo(body).catch(e => {
+    console.log('Error: ', e.message);
+    throw e;
+  });
+
+  return JSON.stringify({_id: insertedDocument.insertedId});
+}
+
 module.exports = {
   getVideos: getVideos,
+  postVideo: postVideo,
 };

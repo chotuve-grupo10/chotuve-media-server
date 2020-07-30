@@ -136,4 +136,43 @@ describe('App Servers functions', function() {
           });
       });
   });
+
+  describe('Delete app server', function() {
+    it('should delete app server successfully',
+      function(done) {
+
+        var payload = {user_id: 'test@test.test', admin_user: true};
+        const token = jwt.sign(payload, 'secret');
+
+        // eslint-disable-next-line max-len
+        app_servers_functions.register_app_server(token, dbHelper, function(err, appServerInserted){
+          if (err) {
+            console.log(err);
+            done(err);
+          }
+
+          expect(appServerInserted).to.be.instanceOf(AppServer);
+
+          // eslint-disable-next-line max-len
+          app_servers_functions.delete_app_server(appServerInserted.getToken(), token, dbHelper, function(err, res){
+            if (err) {
+              console.log(err);
+              done(err);
+            }
+
+            // eslint-disable-next-line max-len
+            app_servers_functions.get_app_servers(token, dbHelper, function(err, appServersList){
+              if (err) {
+                console.log(err);
+                done(err);
+              }
+
+              expect(appServersList.length).to.be.eq(0);
+              done();
+            });
+
+          });
+        });
+      });
+  });
 });

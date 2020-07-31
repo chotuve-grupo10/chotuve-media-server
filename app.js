@@ -1,5 +1,6 @@
 'use strict';
 
+const mongoose = require('mongoose');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -11,6 +12,17 @@ var bodyParser = require('body-parser');
 
 const app = express();
 const DEFAULT_PORT = 3000;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(con => {
+  console.log(`Successfully connected to ${MONGODB_URI}`);
+}).catch(err => {
+  console.log(`Error connecting to ${MONGODB_URI}`);
+  console.log(err);
+});
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -36,7 +48,8 @@ app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 const port = process.env.PORT || DEFAULT_PORT;
-const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port,
+  () => console.log(`${new Date()}: Listening on port ${port}`));
 
 
 // Para poder usar la app Express en las pruebas de integracion / aceptacion

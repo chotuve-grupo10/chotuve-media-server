@@ -4,9 +4,6 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const ping = require('./routes/ping');
-const upload_video = require('./routes/upload_video');
-const list_videos = require('./routes/list_videos');
-const delete_video = require('./routes/delete_video');
 const app_servers = require('./routes/app_servers');
 const videos = require('./routes/videos');
 const check_permissions = require('./utilities/middleware/check_permisions');
@@ -31,9 +28,6 @@ app.use(bodyParser.json());
 app.use('/api/videos', check_permissions);
 
 app.use('/api/ping', ping);
-app.use('/api/upload_video', upload_video);
-app.use('/api/list_videos', list_videos);
-app.use('/api/delete_video', delete_video);
 app.use('/api/app_servers', app_servers);
 app.use('/api/videos', videos);
 

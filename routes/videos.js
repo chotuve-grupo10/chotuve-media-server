@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const Database = require('../Database').Database;
 const MongoDB = require('../MongoDB').MongoDB;
 const firebase = require('../firebase-storage');
+const videos_functions = require('../utilities/videos_functions');
 
 /**
  * @swagger
@@ -36,22 +36,9 @@ const firebase = require('../firebase-storage');
 
 router.get('/', async(req, res) => {
   const db_service = new MongoDB();
-  var db, videosList;
   await db_service.start();
-  db = new Database(db_service.db);
-  if (req.query.user_name) {
-    console.log(`Filtering resources for user_name ${req.query.user_name}`);
-    videosList = await db.getVideos({ for_user: req.query.user_name });
-  } else {
-    videosList = await db.getVideos();
-  }
-  await Promise.all(videosList.map(async element => {
-    var { size, thumbnail } = await firebase.getFileMetadata(element.fileName);
-    console.log(`size: ${size}, thumbnail: ${thumbnail}`);
-    element.size = size;
-    element.thumbnail = thumbnail;
-  }));
-  console.log(videosList);
+  // eslint-disable-next-line max-len
+  let videosList = await videos_functions.getVideos(db_service, req.query.user_name, firebase);
   res.send(videosList);
   db_service.stop();
 });
@@ -107,17 +94,16 @@ router.get('/', async(req, res) => {
  */
 router.post('/', async(req, res) => {
   const db_service = new MongoDB();
-  var db;
   await db_service.start();
-  console.log('POSTing new video');
-  db = new Database(db_service.db);
 
-  let insertedDocument = await db.addNewVideo(req.body).catch(e => {
-    res.status(500).send({Error: e.message});
+  // eslint-disable-next-line max-len
+  let video_inserted_id = await videos_functions.postVideo(db_service, req.body).catch(e => {
     console.log('Error: ', e.message);
+    res.status(500).send({Error: e.message});
   });
 
-  res.status(201).send(JSON.stringify({_id: insertedDocument.insertedId}));
+  res.status(201).send(video_inserted_id);
+  db_service.stop();
 });
 
 /**
@@ -155,36 +141,55 @@ router.post('/', async(req, res) => {
  */
 router.delete('/:id', async(req, res) => {
   const db_service = new MongoDB();
-  var db;
   await db_service.start();
 
-  db = new Database(db_service.db);
-
-  await db.getVideoById(req.params.id, async function(err, file){
-    if (err) {
-      console.log(err);
-      res.status(500).send({Error: err.message});
-    } else if (!file) {
-      console.log(`File not found: ${file}`);
-      res.status(404).send({Error: 'Resource not found'});
-    } else {
-      console.log(`Video to delete: ${file.fileName}`);
-      try {
-        await firebase.deleteFile(file.fileName);
-        try {
-          await firebase.deleteFile(`thumb_${file.fileName}.jpg`);
-        } catch (err) {
-          console.log(`Couldn't delete thumbnail for file ${file.fileName}`);
-        }
-        await db.deleteVideoByObjectId(req.params.id);
-        res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
-      } catch (err) {
-        console.log('Error deleting video');
-        console.log(err);
-        res.status(500).send({Error: err.message});
-      }
-    }
+  // eslint-disable-next-line max-len
+  let result = await videos_functions.deleteVideo(db_service, req.params.id, firebase).catch(e => {
+    console.log('Error: ', e.message);
+    res.status(500).send({Error: e.message});
   });
+
+  switch (result) {
+    case 404:
+      // eslint-disable-next-line max-len
+      res.status(result).send({Error: 'Video doesnt exist'});
+      db_service.stop();
+      break;
+    default:
+      // eslint-disable-next-line max-len
+      res.status(result).send(JSON.stringify({Delete: 'Video deleted'}));
+      db_service.stop();
+      break;
+  }
+
+  // var db;
+  // db = new Database(db_service.db);
+
+  // await db.getVideoById(req.params.id, async function(err, file){
+  //   if (err) {
+  //     console.log(err);
+  //     res.status(500).send({Error: err.message});
+  //   } else if (!file) {
+  //     console.log(`File not found: ${file}`);
+  //     res.status(404).send({Error: 'Resource not found'});
+  //   } else {
+  //     console.log(`Video to delete: ${file.fileName}`);
+  //     try {
+  //       await firebase.deleteFile(file.fileName);
+  //       try {
+  //         await firebase.deleteFile(`thumb_${file.fileName}.jpg`);
+  //       } catch (err) {
+  //         console.log(`Couldn't delete thumbnail for file ${file.fileName}`);
+  //       }
+  //       await db.deleteVideoByObjectId(req.params.id);
+  //       res.status(200).send(JSON.stringify({Delete: 'Video deleted'}));
+  //     } catch (err) {
+  //       console.log('Error deleting video');
+  //       console.log(err);
+  //       res.status(500).send({Error: err.message});
+  //     }
+  //   }
+  // });
 });
 
 module.exports = router;

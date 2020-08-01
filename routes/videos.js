@@ -35,12 +35,10 @@ const videos_functions = require('../utilities/videos_functions');
  */
 
 router.get('/', async(req, res) => {
-  const db_service = new MongoDB();
-  await db_service.start();
   // eslint-disable-next-line max-len
-  let videosList = await videos_functions.getVideos(db_service, req.query.user_name, firebase);
+  // let videosList = await videos_functions.getVideos(req.query.user_name, firebase);
+  let videosList = await videos_functions.getVideosNew(null, firebase);
   res.send(videosList);
-  db_service.stop();
 });
 
 /**

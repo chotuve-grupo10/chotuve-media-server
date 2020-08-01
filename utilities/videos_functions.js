@@ -1,5 +1,22 @@
 'use strict';
 const Database = require('../Database').Database;
+const Video = require('../model/Video');
+
+async function getVideosNew(user_name, firebase) {
+  var videosList;
+  if (user_name) {
+    console.log(`Filtering resources for user_name ${user_name}`);
+    videosList = await Video.find({ for_user: user_name }).exec();
+  } else {
+    videosList = await Video.find().exec();
+  }
+  await Promise.all(videosList.map(async element => {
+    var { size, thumbnail } = await firebase.getFileMetadata(element.fileName);
+    console.log(`size: ${size}, thumbnail: ${thumbnail}`);
+    element.size = size;
+    element.thumbnail = thumbnail;
+  }));
+}
 
 async function getVideos(db_service, user_name, firebase){
 
@@ -66,6 +83,7 @@ async function deleteVideo(db_service, id, firebase){
 
 module.exports = {
   getVideos: getVideos,
+  getVideosNew: getVideosNew,
   postVideo: postVideo,
   deleteVideo: deleteVideo,
 };
